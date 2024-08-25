@@ -11,7 +11,7 @@ endpoints.post('/validar', async (req, resp) => {
 
     try {
         if (!nome || !telefone || !cep || !nascimento || !status || !inscricao || !visita || !qrcode) {
-            return resp.status(400).send({ error: 'Todos os parâmetros são obrigatórios' });
+            return resp.status(400).send({ error: 'Todos os parâmetros são obrigatórios' })
         }
 
         let a = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
@@ -25,9 +25,11 @@ endpoints.post('/validar', async (req, resp) => {
 
         let id = await validarInscricao(nome, telefone, cep, nascimento, bairro, status, inscricao, visita, qrcode)
         resp.send({ id })
+
     } catch (error) {
-        console.error('Erro ao processar a inscrição:', error)
-        resp.status(500).send({ error: 'Erro ao processar a inscrição' })
+        resp.status(500).send({ error:
+            'Erro ao processar a inscrição' 
+        })
     }
 })
 

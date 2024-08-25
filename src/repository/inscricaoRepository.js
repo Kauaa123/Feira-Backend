@@ -11,7 +11,8 @@ export async function validarInscricao(nome, telefone, cep, nascimento, bairro, 
 
         
     } catch (err) {
-        console.error('Erro ao inserir inscrição:', err) 
-        throw err 
+        response.status(400).send({
+            err: err
+        })
     }
 }
