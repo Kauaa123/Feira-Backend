@@ -11,14 +11,18 @@ endpoints.post('/validar', async (req, resp) => {
 
     try {
         if (!nome || !telefone || !cep || !nascimento || !status || !inscricao || !visita || !qrcode) {
-            return resp.status(400).send({ error: 'Todos os parâmetros são obrigatórios' })
+            return resp.status(400).send({ 
+                error: 'Todos os parâmetros são obrigatórios' 
+            })
         }
 
         let a = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
         let dados = a.data
 
         if (dados.erro) {
-            return resp.status(400).send({ error: 'CEP inválido' })
+            return resp.status(400).send({ 
+                error: 'CEP inválido' 
+            })
         }
 
         let bairro = dados.bairro
