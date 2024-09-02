@@ -7,17 +7,17 @@ const endpoints = Router()
 endpoints.use(express.json())
 
 endpoints.post('/validar', async (req, resp) => {
-    const { nome, telefone, cep, nascimento, status, inscricao, visita, qrcode } = req.body
+    const { nome, telefone, cep, bairro, nascimento, cadastro, situacao } = req.body
 
     try {
-        if (!nome || !telefone || !cep || !nascimento || !status || !inscricao || !visita || !qrcode) {
+        if (!nome || !telefone || !cep || !nascimento || !cadastro || !situacao) {
             return resp.status(400).send({ 
                 error: 'Todos os parâmetros são obrigatórios' 
             })
         }
 
-        let a = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
-        let dados = a.data
+        let resp = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
+        let dados = resp.data
 
         if (dados.erro) {
             return resp.status(400).send({ 
@@ -27,7 +27,7 @@ endpoints.post('/validar', async (req, resp) => {
 
         let bairro = dados.bairro
 
-        let id = await validarInscricao(nome, telefone, cep, nascimento, bairro, status, inscricao, visita, qrcode)
+        let id = await validarInscricao(nome, telefone, cep, bairro, nascimento, cadastro, situacao)
         resp.send({ id })
 
     } catch (error) {
