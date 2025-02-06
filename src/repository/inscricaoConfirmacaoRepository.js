@@ -1,12 +1,12 @@
-import con from './connection.js'
+import con from './connection.js';
 
-export async function validarInscricaoConfirmacao(idInscricao, chegada, qrcode) {
+export async function InscricaoConfirmacao(idInscricao, chegada, qrcode) {
     const sql = `INSERT INTO tb_inscricao_confirmacao (id_inscricao, dt_chegada, ds_qrcode) 
-                 VALUES (?, ?, ?)`
+                 VALUES (?, ?, ?)`;
 
     try {
-        const [result] = await con.query(sql, [idInscricao, chegada, qrcode])
-        return result.insertId
+        const [result] = await con.query(sql, [idInscricao, chegada, qrcode]);
+        return result.insertId;
 
 
         

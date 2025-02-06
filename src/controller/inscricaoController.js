@@ -1,23 +1,20 @@
-import { Router } from 'express'
-import { validarInscricao } from '../repository/inscricaoRepository.js'
-import axios from 'axios'
-import express from 'express'
+import { Router } from 'express';
+import { Inscricao } from '../repository/inscricaoRepository.js';
+import axios from 'axios';
+import express from 'express';
+import validarInscricao from '../validation/inscricaoValidacao.js';
 
-const endpoints = Router()
-endpoints.use(express.json())
+const endpoints = Router();
+endpoints.use(express.json());
 
 endpoints.post('/validar', async (req, resp) => {
-    const { nome, telefone, cep, bairro, nascimento, cadastro, situacao } = req.body
+    const { nome, telefone, cep, bairro, nascimento, cadastro, situacao } = req.body;
 
     try {
-        if (!nome || !telefone || !cep || !nascimento || !cadastro || !situacao) {
-            return resp.status(400).send({ 
-                error: 'Todos os parâmetros são obrigatórios' 
-            })
-        }
+        validarInscricao(req);
 
-        let resp = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
-        let dados = resp.data
+        let response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+        let dados = response.data;
 
         if (dados.erro) {
             return resp.status(400).send({ 
@@ -25,16 +22,18 @@ endpoints.post('/validar', async (req, resp) => {
             })
         }
 
-        let bairro = dados.bairro
+        let bairro = dados.bairro;
 
-        let id = await validarInscricao(nome, telefone, cep, bairro, nascimento, cadastro, situacao)
-        resp.send({ id })
+        let id = await Inscricao(nome, telefone, cep, bairro, nascimento, cadastro, situacao);
+        resp.send({ id: id });
 
     } catch (error) {
-        resp.status(500).send({ error:
-            'Erro ao processar a inscrição' 
-        })
+        if (error.message) {
+            return resp.status(400).send({ error: error.message });
+        }
+    
+        resp.status(500).send({ error: 'Erro interno no servidor' });
     }
 })
 
-export default endpoints
+export default endpoints;

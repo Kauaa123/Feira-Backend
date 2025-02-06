@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise'
+import mysql from 'mysql2/promise';
 
 let con = await mysql.createConnection({
     host: process.env.MYSQL_HOST,
@@ -8,17 +8,17 @@ let con = await mysql.createConnection({
 
     typeCast: function (field, next) {
         if (field.type === 'TINY' && field.length === 1) {
-            return (field.string() === '1')
+            return (field.string() === '1');
         }
         else if (field.type.includes('DECIMAL')) {
-            return Number(field.string())
+            return Number(field.string());
         }
         else {
-            return next()
+            return next();
         }
     }
 });
 
-console.log('Conectado com sucesso')
+console.log('Conectado com sucesso');
 
-export default con
+export default con;
